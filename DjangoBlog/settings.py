@@ -22,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'n9ceqv38)#&mwuat@(mjb_p%em$e8$qyr#fw9ot!=ba6lijx-6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+#DEBUG = True
+DEBUG = False
 TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['*', '127.0.0.1', 'example.com']
+ALLOWED_HOSTS = ['*', '127.0.0.1', 'neokyzen.cn']
 # Application definition
 
 
@@ -101,8 +101,8 @@ DATABASES = {
         'NAME': 'djangoblog',
         'USER': os.environ.get('DJANGO_MYSQL_USER'),
         'PASSWORD': os.environ.get('DJANGO_MYSQL_PASSWORD'),
-        'HOST': os.environ.get('DJANGO_MYSQL_HOST'),
-        'PORT': 3306,
+        'HOST': '',
+        'PORT': '',
         'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
@@ -176,10 +176,14 @@ CACHE_CONTROL_MAX_AGE = 2592000
 # cache setting
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_LOCATION'),
         'KEY_PREFIX': 'django_test' if TESTING else 'djangoblog',
-        'TIMEOUT': 60 * 60 * 10
+	'TIMEOUT': 60 * 60 * 10,
+	'OPTIONS':{
+		'CLIENT_CLASS':'django_redis.client.DefaultClient',
+		'PASSWORD':os.environ.get('REDIS_PASSWORD')
+	}
     },
     'locmemcache': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -194,14 +198,14 @@ BAIDU_NOTIFY_URL = "http://data.zz.baidu.com/urls?site=https://www.lylinux.net&t
 # Emial:
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# EMAIL_USE_TLS = True
-EMAIL_USE_SSL = True
+EMAIL_USE_TLS = True
+#EMAIL_USE_SSL = True
 
-EMAIL_HOST = 'smtp.mxhichina.com'
-EMAIL_PORT = 465
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
 EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = '博客认证'
 SERVER_EMAIL = os.environ.get('DJANGO_EMAIL_USER')
 # Setting debug=false did NOT handle except email notifications
 ADMINS = [('admin', 'admin@admin.com')]
